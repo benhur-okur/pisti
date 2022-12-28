@@ -237,8 +237,8 @@ public class game {
 		}
 		
 
-		point obj1 = new point(deckPC_P, deckPC_W, deckUS_W, deckUS_P);
-		System.out.println("computers point -> " + obj1.pointsPC() + "/n" + "users point -> " + obj1.pointsUS());
+		point obj1 = new point(deckPC_P, deckPC_W, deckUS_P, deckUS_W);
+		System.out.println("computers point -> " + obj1.pointsPC() + "\n" + "users point -> " + obj1.pointsUS());
 
 		//System.out.println("users point -> " + obj1.pointsUS());
 
@@ -398,11 +398,23 @@ public class game {
 	}
 	
 	public static void playUS(String[] deckUS, String[] deckTI, String[] deckUS_W, String[] deckUS_P) {
+		int test = 0;
 		String deneme = new String("AJ");	
 		Scanner sc = new Scanner(System.in);
 		System.out.println("which card do you want to play? ");
 		String cardUS = sc.nextLine();
+			
+		for(int i = 0;i<deckUS.length;i++) {
+			if(deckUS[i] == cardUS) {test++; }
+		}	
 
+		while(test != 1) {
+			System.out.println("Why don't you USE one of your CARDS!?, Try Again ");
+			System.out.println("which card do you want to play? ");
+			cardUS = sc.nextLine();
+		}
+
+		
 		int counter = 0;
 
 		for(int i = 0;i<deckTI.length;i++) {
@@ -440,9 +452,9 @@ public class game {
 						deckTI[a] = null;
 					}
 					break; // buradan deckTI' a geçmemesi lazım eger pisti saglıyorsa;
-
+	
 				} 
-
+	
 				 else {
 					deckTI[counter] = deckUS[i];
 					deckUS[i] = null;
@@ -450,6 +462,7 @@ public class game {
 				}
 			} 
 		}
+		
 	}
 
 	public static String showTop(String[] deckTI) { //  it would be -1 it is error 327.satır
