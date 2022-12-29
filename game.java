@@ -1,3 +1,6 @@
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Scanner;
 import java.util.Random;
 public class game {
@@ -25,12 +28,12 @@ public class game {
  
 		String[] jokers = new String[4];
 
-		jokers[0] = arr[0][10]; // these are the "jack" which is get whole cards int the table;
-		jokers[1] = arr[1][10];
-		jokers[2] = arr[2][10];
-		jokers[3] = arr[3][10];
+		String playerName;
 
+		System.out.println("-----Welcome to the PISTI game, if you want to play please press 1, if you want to see high scores please press 2:");
+		int A = sc.nextInt();
 
+		//if(A == 2)
 
 		int cut;
 
@@ -214,8 +217,6 @@ public class game {
 		int totalCardsUS = countUS_W(deckUS_W) + countUS_P(deckUS_P);
 		int totalCardsPC = countPC_W(deckUS_W) + countPC_P(deckUS_W);	
 
-		System.out.println(totalCardsUS + " - " + totalCardsPC + " US - PC ");	
-
 		int countAfter = 0;
 
 		for(int i = 0;i<deckTI.length;i++) {
@@ -268,6 +269,42 @@ public class game {
 
 		for(int i = 0;i<countPC_W(deckPC_W);i++) {
 			System.out.println(deckPC_W[i]);
+		}
+
+
+		if(obj1.pointsPC() > obj1.pointsUS()) {
+			System.out.println("-------- COMPUTER WON !! --------");
+		}
+		
+		if(obj1.pointsUS() > obj1.pointsPC()) {
+			System.out.println("-------- YOU WON CONGRATULATİONS!! --------");
+		}
+		
+		if(obj1.pointsPC() == obj1.pointsUS()) {
+			System.out.println("--------- DRAW !! --------");
+			System.out.println("DONT YOU WANNA PLAY AGAİN OR YOU JUST SCARED HUH ?!");
+		}
+
+		try{
+			File fObj = new File("highScores.txt");
+			if(fObj.createNewFile()) {
+				System.out.println("File Created: " + fObj.getName());
+			} else {
+				System.out.println("File already exists. ");
+			}
+		} catch (IOException e) {
+			System.out.println("An error occurred. ");
+			e.printStackTrace();
+		}
+
+		try{
+			FileWriter myWriter = new FileWriter("highScores.txt");
+			myWriter.write("hello 1");
+			myWriter.close();
+			System.out.println("Successfully wrote to the file. ");
+		} catch (IOException e) {
+			System.out.println("An error occurred. ");
+			e.printStackTrace();
 		}
 
 	}
@@ -399,21 +436,31 @@ public class game {
 	
 	public static void playUS(String[] deckUS, String[] deckTI, String[] deckUS_W, String[] deckUS_P) {
 		int test = 0;
+		String[] str = new String[1]; 
 		String deneme = new String("AJ");	
 		Scanner sc = new Scanner(System.in);
 		System.out.println("which card do you want to play? ");
 		String cardUS = sc.nextLine();
 			
 		for(int i = 0;i<deckUS.length;i++) {
-			if(deckUS[i] == cardUS) {test++; }
-		}	
-
-		while(test != 1) {
-			System.out.println("Why don't you USE one of your CARDS!?, Try Again ");
-			System.out.println("which card do you want to play? ");
-			cardUS = sc.nextLine();
+			str[0] = cardUS;
+			if (str[0].equals(deckUS[i])) {
+				test++;
+				break;
+			}
 		}
 
+		while(test == 0 ) {
+			System.out.println("you have entered invalid value PLEASE Try again!!");
+			cardUS = sc.nextLine();
+			for(int i = 0;i<deckUS.length;i++) {
+				str[0] = cardUS;
+				if (str[0].equals(deckUS[i])) {
+					test++;
+					break;
+				}
+			}
+		}
 		
 		int counter = 0;
 
