@@ -1,14 +1,15 @@
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.Scanner;
 import java.util.Random;
+import java.util.InputMismatchException;
 public class game {
 	public static void main(String[] args) {
 		Random ran = new Random(System.currentTimeMillis());
 		Scanner sc = new Scanner(System.in);
 
-		String[][] arr = {{"SA", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "S9", "SX", "SJ", "SQ","SK"}, {"CA", "C2", "C3", "C4", "C5", "C6", "C7", "C8", "C9", "CX", "CJ", "CQ", "CK"}, {"HA", "H2", "H3", "H4", "H5", "H6", "H7", "H8", "H9", "HX", "HJ", "HQ", "HK"}, {"DA", "D2", "D3", "D4", "D5", "D6", "D7", "D8", "D9", "DX", "DJ", "DQ", "DK"}}; // i did multidimensional array cause there are 4 units which are: clubs hearts spades, diamonds 	
+		HighScoreTable table = new HighScoreTable();
+
+		String[][] arr = {{"SA", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "S9", "S10", "SJ", "SQ","SK"}, {"CA", "C2", "C3", "C4", "C5", "C6", "C7", "C8", "C9", "C10", "CJ", "CQ", "CK"}, {"HA", "H2", "H3", "H4", "H5", "H6", "H7", "H8", "H9", "H10", "HJ", "HQ", "HK"}, {"DA", "D2", "D3", "D4", "D5", "D6", "D7", "D8", "D9", "D10", "DJ", "DQ", "DK"}}; // i did multidimensional array cause there are 4 units which are: clubs hearts spades, diamonds 	
 	
 		int k, n;
 
@@ -18,26 +19,71 @@ public class game {
 		String[] deckPC = new String[4]; // deck of computer
 		String[] deckUS = new String[4]; // deck of user
 
-		String[] deckTI = new String[52]; // initial deck of table which provides four cards;
+		String[] deckTI = new String[52]; // table which provides four cards firstly;
 
 		String[] deckUS_W = new String[52];// cards of user which he/she has won;
 		String[] deckPC_W = new String[52]; // cards of computer which it has won;
 
-		String[] deckPC_P = new String[52]; // these two arrays for pişti cards
-		String[] deckUS_P = new String[52];
+		String[] deckPC_P = new String[52]; // pishti cards which Computer won
+		String[] deckUS_P = new String[52]; // pishti cards which User won
  
-		String[] jokers = new String[4];
-
 		String playerName;
+		String computerName = new String("COMPUTER");
 
+		int score = 0;
+		int A = 0;
+
+		
 		System.out.println("-----Welcome to the PISTI game, if you want to play please press 1, if you want to see high scores please press 2:");
-		int A = sc.nextInt();
 
-		//if(A == 2)
+		try {
+  			A = sc.nextInt();
+		} catch (InputMismatchException e) {
+ 			System.err.println("Entered value is not an integer");
+		}
+
+		if (A == 2) {
+			
+			try {
+				table.printTable();
+			} catch(IOException e) {
+				e.printStackTrace();
+			} 
+
+
+			System.out.println("---- What do want to next if you want to quit please press 3, if you want to play PRESS 1 !!----");
+			
+			try {
+				A = sc.nextInt(); //
+			} catch (InputMismatchException e) {
+				System.out.println("please enter valid number!, try again later!!");
+				System.exit(0);
+
+ 		
+			}
+			
+			if(A == 3) {
+				System.out.println(" --- Quitting ... --- ");
+				System.exit(0);
+			}	
+		
+		}
+
+		if(A != 1) {
+			System.out.println(" --- You cannot enter that value, quitting... ---");
+			System.exit(0);
+		}
+
+		String trash = sc.nextLine();
+
+		
+		
+		System.out.println("Please Enter Your NAME! ");
+		playerName = sc.nextLine();
 
 		int cut;
 
-		for (int i = 0;i < 52; i++) {
+		for (int i = 0;i < 52; i++) { // this is for randoming
 			boolean found = false;
 			while(!found) {
 				k = ran.nextInt(4) ;
@@ -89,6 +135,9 @@ public class game {
 		// first player is PC 
 
 		}
+		
+		/*
+	
 		System.out.println();
 		System.out.println("before cut");
 		System.out.println();
@@ -102,6 +151,8 @@ public class game {
 		for (int i = 0;i<deckAC.length;i++) {
 			System.out.println(deckAC[i]);
 		}
+
+		*/
 
 
 		//--------------------------------
@@ -122,11 +173,11 @@ public class game {
 
 		int counter2 = 0;
 
-		for(int i = 0;i<deckTI.length;i++) {
+		for(int i = 0;i<deckTI.length;i++) { // these steps filling the table with null
 			deckTI[i] = null;
 		}
 
-		for(int i = 0;i<4;i++) {
+		for(int i = 0;i<4;i++) { // if the table null counter2 would be plus 1;
 			if(deckTI[i] == null) {
 				counter2++;
 			}
@@ -134,7 +185,7 @@ public class game {
 
 		
 
-		if(counter2 == 4) {
+		if(counter2 == 4) {  // and counter has just been 4 and first four cards going to the table form deckAC which is after cut array and ı made null deckAC[] which cards went to the table
 		
 			for(int i = 0;i<4;i++) {
 				deckTI[i] = deckAC[J];
@@ -154,19 +205,19 @@ public class game {
 			
 		System.out.println(J);
 
-		int counter = 0;		
+		int counter = 0;	
 
-		for(int u = 0;u<24;u++) {
+		for(int u = 0;u<24;u++) { // this loop for the main game part it loop for 24 time because there would be 6 fames which 48 / 8 = 6,   48 is length of deckAC[] after four cards and each player has an 4 caurds thus game have to loop for 24 times		
 
-			// take it into a method ***
-		
+			printTop(deckTI);
+
 			for(int i = 0;i<deckUS.length;i++) {
 				if(deckUS[i] == null) {
 					counter++;
 				}
 			}
 
-			if(counter == 4) {
+			if(counter == 4) { // these if statement is for filling the user and computers hand if the counter 4 that means they whole hands are null (there are 4 null);
 				for(int i = 0;i<deckUS.length;i++) {
 					deckPC[i] = deckAC[J];
 					deckAC[J] = null;
@@ -175,13 +226,13 @@ public class game {
 					deckAC[J] =null;
 					J--;
 				}
-				showTop(deckTI);
+				showTop(deckTI); // these method is whowing the top card of table;
 			counter = 0;
 			} else {
 				counter = 0;
 			}
 			
-			infoPC(deckUS, deckPC, deckTI, J);
+			// infoPC(deckUS, deckPC, deckTI, J); // giving info about computer's hand it would be in the comment because we don't want to it can be seen;
 
 			playPC(deckPC, deckTI, deckPC_W, deckPC_P);
 
@@ -211,10 +262,12 @@ public class game {
 			infoUS(deckUS, deckTI, J);
 
 			playUS(deckUS, deckTI, deckUS_W, deckUS_P);
+
+			
 	
 		}
 
-		int totalCardsUS = countUS_W(deckUS_W) + countUS_P(deckUS_P);
+		int totalCardsUS = countUS_W(deckUS_W) + countUS_P(deckUS_P); // these two int for the calculating the totalcards for both computer and user wnad thus we can see who has more cards and give the cards which abide at the table 
 		int totalCardsPC = countPC_W(deckUS_W) + countPC_P(deckUS_W);	
 
 		int countAfter = 0;
@@ -238,7 +291,7 @@ public class game {
 		}
 		
 
-		point obj1 = new point(deckPC_P, deckPC_W, deckUS_P, deckUS_W);
+		point obj1 = new point(deckPC_P, deckPC_W, deckUS_P, deckUS_W); // this object for calculating the points copmuter and user's cards which they won;
 		System.out.println("computers point -> " + obj1.pointsPC() + "\n" + "users point -> " + obj1.pointsUS());
 
 		//System.out.println("users point -> " + obj1.pointsUS());
@@ -274,62 +327,81 @@ public class game {
 
 		if(obj1.pointsPC() > obj1.pointsUS()) {
 			System.out.println("-------- COMPUTER WON !! --------");
+			score = obj1.pointsPC();
+			table.addScore("COMPUTER", score);
+			
 		}
 		
 		if(obj1.pointsUS() > obj1.pointsPC()) {
 			System.out.println("-------- YOU WON CONGRATULATİONS!! --------");
+			score = obj1.pointsUS();
+			table.addScore(playerName, score);
+
 		}
 		
 		if(obj1.pointsPC() == obj1.pointsUS()) {
+			score = obj1.pointsUS();
 			System.out.println("--------- DRAW !! --------");
+			table.addScore(playerName, score);
 			System.out.println("DONT YOU WANNA PLAY AGAİN OR YOU JUST SCARED HUH ?!");
-		}
-
-		try{
-			File fObj = new File("highScores.txt");
-			if(fObj.createNewFile()) {
-				System.out.println("File Created: " + fObj.getName());
-			} else {
-				System.out.println("File already exists. ");
-			}
-		} catch (IOException e) {
-			System.out.println("An error occurred. ");
-			e.printStackTrace();
-		}
-
-		try{
-			FileWriter myWriter = new FileWriter("highScores.txt");
-			myWriter.write("hello 1");
-			myWriter.close();
-			System.out.println("Successfully wrote to the file. ");
-		} catch (IOException e) {
-			System.out.println("An error occurred. ");
-			e.printStackTrace();
-		}
-
-	}
-
-
-	
-	
-
-
-
-	public static void infoPC (String[] deckUS, String[] deckPC, String[] deckTI, int J) {			
-		System.out.println();
-		System.out.println("the card at the top of deck ->" + showTop(deckTI));
-
-		System.out.println();
-
-		System.out.println("computers deck: ");
-		System.out.println();
-
-		for(String i : deckPC) {
-			System.out.println(i);
-		}
-
 			
+		}
+
+
+		
+
+		/*try {
+			saveHighScore(highScore);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}*/
+
+
+
+		
+		
+		
 	}
+	// -------------------- 0000000000000000
+
+	
+	
+	public static void getHighScore(String highScore) throws IOException {
+		File file = new File ("highScores.txt");
+
+		if(!file.exists()) {
+			file.createNewFile();
+		}
+
+		FileReader fReader = new FileReader(file);
+		String line;
+
+		BufferedReader bReader = new BufferedReader(fReader);
+		
+		while ((line = bReader.readLine()) != null) {
+			System.out.println(line);
+		}
+		bReader.close();
+		
+	}
+
+	/*public static void saveHighScore(String highScore)  throws IOException {
+		File file = new File ("highScores.txt");
+
+		if(!file.exists()) {
+			file.createNewFile();
+		}
+
+		FileWriter fWriter = new FileWriter(file);
+		BufferedWriter bWriter = new BufferedWriter(fWriter);
+		if(hi) }
+			bWriter.write(highScore);
+			bWriter.close();
+		}
+		
+	}*/
+
+
 
 	public static void infoUS (String[] deckUS, String[] deckTI, int J) {			
 		System.out.println();
@@ -393,7 +465,7 @@ public class game {
 				}
 				
 				if(deckPC[i].charAt(1) == showTop(deckTI).charAt(1) && counter == 1) { 
-					System.out.println("ı play -> " + deckPC[i]);
+					System.out.println(" ---- Computer played -> " + deckPC[i]);
 					deckTI[counter] = deckPC[i];
 					counter++;
 					deckPC[i] = null;
@@ -406,7 +478,7 @@ public class game {
 					break;
 				} else if(deckPC[i].charAt(1) == showTop(deckTI).charAt(1) || deckPC[i].charAt(1) == deneme.charAt(1)) {
 
-					System.out.println("ı play -> " + deckPC[i]);
+					System.out.println(" ---- Computer played -> " + deckPC[i]);
 					deckTI[counter] = deckPC[i];
 					counter++;
 					deckPC[i] = null;
@@ -427,7 +499,7 @@ public class game {
 			while(deckPC[r] == null) {
 				r = ran.nextInt(4);
 			}
-			System.out.println("ı play -> " + deckPC[r]); 
+			System.out.println(" ---- Computer played -> " + deckPC[r]); 
 			deckTI[counter] = deckPC[r];
 			deckPC[r] = null;
 		}
@@ -441,6 +513,11 @@ public class game {
 		Scanner sc = new Scanner(System.in);
 		System.out.println("which card do you want to play? ");
 		String cardUS = sc.nextLine();
+
+		if(cardUS.equals("quit") || cardUS.equals("QUIT")) {
+			System.out.println(" ----- quiting ... ----- ");
+			System.exit(0);
+		}
 			
 		for(int i = 0;i<deckUS.length;i++) {
 			str[0] = cardUS;
@@ -453,6 +530,12 @@ public class game {
 		while(test == 0 ) {
 			System.out.println("you have entered invalid value PLEASE Try again!!");
 			cardUS = sc.nextLine();
+
+			if(cardUS.equals("quit") || cardUS.equals("QUIT")) {
+				System.out.println(" ----- quiting ... ----- ");
+				System.exit(0);
+			}
+
 			for(int i = 0;i<deckUS.length;i++) {
 				str[0] = cardUS;
 				if (str[0].equals(deckUS[i])) {
@@ -510,6 +593,20 @@ public class game {
 			} 
 		}
 		
+	}
+
+	public static void printTop(String[] deckTI) {
+		int c = 0;
+
+		for(int i = 0;i<deckTI.length;i++) {
+			if(deckTI[i] != null) {c++;}
+		}
+		if(c == 0) {
+			System.out.println("The card at the top of deck -->> " + deckTI[0]);
+		}
+		if(c != 0) {
+			System.out.println("The card at the top of deck -->> " + deckTI[c-1]);
+		}
 	}
 
 	public static String showTop(String[] deckTI) { //  it would be -1 it is error 327.satır
